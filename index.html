@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Allawcoin - Portefeuille Familial</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #dc2626;
+            --secondary: #ea580c;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fee2e2;
+        }
+        
+        .mining-button {
+            background: linear-gradient(135deg, var(--primary) 0%, #b91c1c 100%);
+            box-shadow: 0 4px 14px 0 rgba(220, 38, 38, 0.4);
+        }
+        
+        .mining-active {
+            background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+            box-shadow: 0 4px 14px 0 rgba(234, 88, 12, 0.4);
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .kyc-badge {
+            background: rgba(22, 163, 74, 0.1);
+            border: 1px solid rgba(22, 163, 74, 0.2);
+        }
+        
+        .tab-active {
+            border-bottom: 3px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .family-circle {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .header-bg {
+            background: linear-gradient(135deg, var(--primary) 0%, #991b1b 100%);
+        }
+        
+        .card-bg {
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+        }
+        
+        .wallet-card {
+            background: linear-gradient(135deg, #fecaca 0%, #fee2e2 100%);
+            border: 1px solid rgba(220, 38, 38, 0.2);
+        }
+        
+        .transaction-income {
+            border-left: 4px solid #10b981;
+        }
+        
+        .transaction-expense {
+            border-left: 4px solid #ef4444;
+        }
+        
+        .qr-code {
+            background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%);
+        }
+        
+        .website-link {
+            position: fixed;
+            bottom: 70px;
+            right: 20px;
+            z-index: 50;
+        }
+    </style>
+</head>
+<body class="bg-red-50">
+    <div class="min-h-screen flex flex-col">
+        <!-- Header avec fond rouge -->
+        <header class="header-bg text-white shadow-sm">
+            <div class="container mx-auto px-4 py-4">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-3">
+                        <div class="bg-white p-2 rounded-full">
+                            <i class="fas fa-coins text-red-600 text-xl"></i>
+                        </div>
+                        <h1 class="text-xl font-bold text-white">Allawcoin</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button class="text-white opacity-90">
+                            <i class="fas fa-bell text-xl"></i>
+                        </button>
+                        <div class="w-8 h-8 rounded-full bg-white bg-opacity-20 flex items-center justify-center">
+                            <i class="fas fa-user text-white"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-grow container mx-auto px-4 py-6">
+            <!-- Tabs -->
+            <div class="flex border-b border-gray-200 mb-6">
+                <button class="px-4 py-2 font-medium text-gray-600" onclick="showTab('family')">Famille</button>
+                <button class="tab-active px-4 py-2 font-medium" onclick="showTab('wallet')">Portefeuille</button>
+                <button class="px-4 py-2 font-medium text-gray-600" onclick="showTab('kyc')">KYC</button>
+                <button class="px-4 py-2 font-medium text-gray-600" onclick="showTab('market')">Marché</button>
+            </div>
+            
+            <!-- Wallet Tab Content -->
+            <div id="walletTab" class="tab-content">
+                <!-- Solde Principal -->
+                <div class="wallet-card rounded-2xl shadow-sm p-6 mb-6 relative overflow-hidden">
+                    <div class="absolute -right-10 -top-10 w-32 h-32 bg-red-200 rounded-full opacity-20"></div>
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-6">
+                            <div>
+                                <p class="text-gray-600">Solde total</p>
+                                <h2 class="text-3xl font-bold text-gray-800">0.000000456 <span class="text-lg">AWC</span></h2>
+                            </div>
+                            <div class="bg-white p-3 rounded-full shadow-sm">
+                                <i class="fas fa-wallet text-red-600 text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <button class="bg-white bg-opacity-80 hover:bg-opacity-100 border border-red-200 text-red-600 font-medium py-2 px-4 rounded-lg flex items-center justify-center transition">
+                                <i class="fas fa-arrow-down mr-2"></i> Recevoir
+                            </button>
+                            <button class="bg-white bg-opacity-80 hover:bg-opacity-100 border border-red-200 text-red-600 font-medium py-2 px-4 rounded-lg flex items-center justify-center transition">
+                                <i class="fas fa-arrow-up mr-2"></i> Envoyer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Portefeuilles Familiaux -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Portefeuilles familiaux</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <!-- Parent Wallet -->
+                        <div class="card-bg rounded-xl shadow-sm p-4">
+                            <div class="flex items-center mb-3">
+                                <div class="bg-red-100 p-2 rounded-full mr-3">
+                                    <i class="fas fa-user-shield text-red-600"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-800">Votre portefeuille</h4>
+                                    <p class="text-xs text-gray-500">Principal</p>
+                                </div>
+                            </div>
+                            <p class="text-2xl font-bold text-gray-800 mb-1">0.000000456</p>
+                            <p class="text-xs text-gray-500">AWC</p>
+                        </div>
+                        
+                        <!-- Enfant 1 -->
+                        <div class="card-bg rounded-xl shadow-sm p-4">
+                            <div class="flex items-center mb-3">
+                                <div class="bg-orange-100 p-2 rounded-full mr-3">
+                                    <i class="fas fa-child text-orange-600"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-800">Marie</h4>
+                                    <p class="text-xs text-gray-500">12 ans</p>
+                                </div>
+                            </div>
+                            <p class="text-2xl font-bold text-gray-800 mb-1">0.000000076</p>
+                            <p class="text-xs text-gray-500">AWC</p>
+                        </div>
+                        
+                        <!-- Enfant 2 -->
+                        <div class="card-bg rounded-xl shadow-sm p-4">
+                            <div class="flex items-center mb-3">
+                                <div class="bg-orange-100 p-2 rounded-full mr-3">
+                                    <i class="fas fa-child text-orange-600"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-800">Jean</h4>
+                                    <p class="text-xs text-gray-500">9 ans</p>
+                                </div>
+                            </div>
+                            <p class="text-2xl font-bold text-gray-800 mb-1">0.000000076</p>
+                            <p class="text-xs text-gray-500">AWC</p>
+                        </div>
+                        
+                        <!-- Épargne Familiale -->
+                        <div class="card-bg rounded-xl shadow-sm p-4">
+                            <div class="flex items-center mb-3">
+                                <div class="bg-green-100 p-2 rounded-full mr-3">
+                                    <i class="fas fa-piggy-bank text-green-600"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-800">Épargne</h4>
+                                    <p class="text-xs text-gray-500">Familiale</p>
+                                </div>
+                            </div>
+                            <p class="text-2xl font-bold text-gray-800 mb-1">0.000000500</p>
+                            <p class="text-xs text-gray-500">AWC</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- QR Code pour recevoir -->
+                <div class="card-bg rounded-2xl shadow-sm p-6 mb-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4 text-center">Recevoir des AWC</h3>
+                    <div class="flex flex-col items-center">
+                        <div class="qr-code p-4 rounded-lg mb-4">
+                            <div class="w-40 h-40 bg-gray-200 flex items-center justify-center text-gray-400">
+                                <i class="fas fa-qrcode text-4xl"></i>
+                            </div>
+                        </div>
+                        <div class="w-full max-w-xs">
+                            <div class="mb-3">
+                                <label class="block text-gray-700 text-sm font-medium mb-1">Adresse Allawcoin</label>
+                                <div class="flex items-center bg-gray-100 rounded-lg p-3">
+                                    <code class="text-xs text-gray-800 truncate flex-grow">awc1q9w8e7r6t5y4u3i2o1p0l9k8j7h6g5f4</code>
+                                    <button class="text-red-600 ml-2">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <button class="mining-button px-4 py-2 rounded-lg text-white font-medium w-full">
+                                <i class="fas fa-share-alt mr-2"></i> Partager l'adresse
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Historique des transactions -->
+                <div>
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-gray-800">Dernières transactions</h3>
+                        <button class="text-red-600 font-medium text-sm">Voir tout</button>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <!-- Transaction 1 (Revenu) -->
+                        <div class="card-bg rounded-xl shadow-sm p-4 transaction-income">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <div class="bg-green-100 p-3 rounded-full mr-4">
+                                        <i class="fas fa-arrow-down text-green-600"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium text-gray-800">Mining familial</h4>
+                                        <p class="text-xs text-gray-500">Aujourd'hui, 14:30</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-medium text-green-600">+0.000000057 AWC</p>
+                                    <p class="text-xs text-gray-500">Bonus famille</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Transaction 2 (Dépense) -->
+                        <div class="card-bg rounded-xl shadow-sm p-4 transaction-expense">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <div class="bg-red-100 p-3 rounded-full mr-4">
+                                        <i class="fas fa-gift text-red-600"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium text-gray-800">Cadeau anniversaire</h4>
+                                        <p class="text-xs text-gray-500">Hier, 18:15</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-medium text-red-600">-0.000000100 AWC</p>
+                                    <p class="text-xs text-gray-500">Transfert à Marie</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Transaction 3 (Revenu) -->
+                        <div class="card-bg rounded-xl shadow-sm p-4 transaction-income">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <div class="bg-blue-100 p-3 rounded-full mr-4">
+                                        <i class="fas fa-users text-blue-600"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium text-gray-800">Bonus parrainage</h4>
+                                        <p class="text-xs text-gray-500">12/06/2023</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-medium text-green-600">+0.000000200 AWC</p>
+                                    <p class="text-xs text-gray-500">Famille Martin</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Family Tab Content (Hidden by default) -->
+            <div id="familyTab" class="tab-content hidden">
+                <!-- Contenu de la section Famille -->
+            </div>
+            
+            <!-- KYC Tab Content (Hidden by default) -->
+            <div id="kycTab" class="tab-content hidden">
+                <!-- Contenu de la section KYC -->
+            </div>
+            
+            <!-- Market Tab Content (Hidden by default) -->
+            <div id="marketTab" class="tab-content hidden">
+                <!-- Contenu de la section Marché -->
+            </div>
+        </main>
+
+        <!-- Bouton flottant pour le site web -->
+        <div class="website-link">
+            <a href="https://www.allawcoin.com" target="_blank" class="bg-red-600 text-white p-4 rounded-full shadow-lg flex items-center justify-center">
+                <i class="fas fa-globe text-xl"></i>
+            </a>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="bg-white border-t border-gray-200 py-3">
+            <div class="container mx-auto px-4">
+                <div class="flex justify-around">
+                    <button class="text-gray-500 flex flex-col items-center" onclick="showTab('family')">
+                        <i class="fas fa-home text-xl"></i>
+                        <span class="text-xs mt-1">Accueil</span>
+                    </button>
+                    <button class="text-red-600 flex flex-col items-center" onclick="showTab('wallet')">
+                        <i class="fas fa-wallet text-xl"></i>
+                        <span class="text-xs mt-1">Portefeuille</span>
+                    </button>
+                    <button class="text-gray-500 flex flex-col items-center" onclick="showTab('family')">
+                        <i class="fas fa-users text-xl"></i>
+                        <span class="text-xs mt-1">Famille</span>
+                    </button>
+                    <button class="text-gray-500 flex flex-col items-center" onclick="showTab('market')">
+                        <i class="fas fa-store text-xl"></i>
+                        <span class="text-xs mt-1">Marché</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + 'Tab').classList.remove('hidden');
+            
+            // Update tab styling
+            document.querySelectorAll('.flex.border-b button').forEach(tab => {
+                tab.classList.remove('tab-active');
+            });
+            
+            // Set active tab (for demonstration,
+</body>
+</html>
